@@ -12,7 +12,7 @@
                 <img :src="data.image" class="card-img" alt="">
             </a>
             <p class="text-wrap">{{data.name}}</p>
-            <h5>{{data.price}}</h5>
+            <h5>Rp. {{data.price}}</h5>
         </div>
 </div>
 </template>
@@ -30,7 +30,9 @@ export default {
 
 <style scoped>
     .card {
-        width: 250px;
+        width: 255px;
+        background: transparent;
+        border: transparent;
     }
     .card-img {
         border-radius: 10px;

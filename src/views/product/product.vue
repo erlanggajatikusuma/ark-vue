@@ -1,31 +1,219 @@
 <template>
-    <div>
-        <h1>Product Page</h1>
-        <div class="row">
-            <div class="col-md-4" v-for="product in products" :key="product.id">
-                <Card :data="product"/>
+    <div id="products">
+        <div class="row bg-dark">
+            <!-- <div class="col-lg-12" v-for="product in products" :key="product.id"> -->
+            <div class="col-lg-12">
+                <!-- <Card :data="product"/> -->
+                <p class="text-center text-light display-4 pt-2">Product Data</p>
             </div>
         </div>
 
+        <div class="container">
+          <div class="row mt-3">
+            <div class="col-lg-6">
+              <h3 class="text-info text-left">Products</h3>
+            </div>
+            <div class="col-lg-6">
+              <button type="button" class="btn btn-primary float-right" data-toggle="modal" data-target="#addProduct">
+                Add new product
+              </button>
+            </div>
+          </div>
+            <hr class="bg-info">
+            <!-- Alert -->
+            <div class="alert alert-danger text-left" v-if="errorMsg">Error Message</div>
+            <div class="alert alert-success text-left" v-if="successMsg">Success Message</div>
+
+            <!-- Display Products -->
+            <div class="row">
+              <div class="col-lg-12">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr class="bg-info text-light">
+                      <th>Id</th>
+                      <th>Name</th>
+                      <th>Price</th>
+                      <th>Id Category</th>
+                      <th>Id Status</th>
+                      <th>Image</th>
+                      <th>Edit</th>
+                      <th>Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="text-center">
+                      <td>1</td>
+                      <td>Bakso</td>
+                      <td>Rp. 10.000</td>
+                      <td>2</td>
+                      <td>1</td>
+                      <td>bakso.png</td>
+                      <td><a href="#" class="text-success" @click="showEditModal=true">Edit</a></td>
+                      <td><a href="#" class="text-danger" @click="showDeleteModal=true">Delete</a></td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>1</td>
+                      <td>Bakso</td>
+                      <td>Rp. 10.000</td>
+                      <td>2</td>
+                      <td>1</td>
+                      <td>bakso.png</td>
+                      <td><a href="#" class="text-success">Edit</a></td>
+                      <td><a href="#" class="text-danger">Delete</a></td>
+                    </tr>
+                    <tr class="text-center">
+                      <td>1</td>
+                      <td>Bakso</td>
+                      <td>Rp. 10.000</td>
+                      <td>2</td>
+                      <td>1</td>
+                      <td>bakso.png</td>
+                      <td><a href="#" class="text-success">Edit</a></td>
+                      <td><a href="#" class="text-danger">Delete</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+        </div>
+
+        <!-- Add Product -->
+          <div class="modal fade" id="addProduct" tabindex="-1" aria-labelledby="addProductLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Add Product</h5>
+                  <button type="button" class="close" aria-label="Close" data-dismiss="modal">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-4">
+                  <form>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control shadow" v-model="form.name">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Image</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control shadow" v-model="form.image">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Price</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control shadow" v-model="form.price">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Category</label>
+                        <div class="col-sm-10">
+                            <div class="dropdown d-flex">
+                                <div class="form-group btn shadow">
+                                  <select name="category" style="border:transparent;" v-model="form.idCategory">
+                                    <option value="1">Drink</option>
+                                    <option value="2">Food</option>
+                                  </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  </form>
+                </div>
+                 <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal" @click="insertData()">Add</button>
+                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
+                 </div>
+              </div>
+            </div>
+          </div>
+        <!-- Add Product -->
+        <!-- Edit Product -->
+        <div id="overlay" v-if="showEditModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Edit Product</h5>
+                  <button type="button" class="close" aria-label="Close" @click="showEditModal=false">
+                    <span aria-hidden="true" data-dismiss="modal">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-4">
+                  <form action="#" method="post">
+                    <div class="form-group">
+                      <input type="text" name="name" class="form-control form-control-lg" placeholder="name">
+                    </div>
+                    <div class="form-group">
+                      <input type="text" name="price" class="form-control form-control-lg" placeholder="price">
+                    </div>
+                    <div class="form-group">
+                      <input type="number" name="category" class="form-control form-control-lg" placeholder="category">
+                    </div>
+                    <div class="form-group">
+                      <input type="number" name="status" class="form-control form-control-lg" placeholder="status">
+                    </div>
+                    <div class="form-group">
+                      <input type="file" name="image" class="form-control form-control-lg" placeholder="image">
+                    </div>
+                    <div class="form-group">
+                      <button class="btn btn-info btn-lg btn-block" @click="showEditModal=false">Update Product</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- Edit Product -->
+        <!-- Delete Product -->
+        <div id="overlay" v-if="showDeleteModal">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Delete Product</h5>
+                  <button type="button" class="close" aria-label="Close" @click="showDeleteModal=false">
+                    <span aria-hidden="true" data-dismiss="modal">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body p-4">
+                  <h4 class="text-danger">Are you sure to delete this product?</h4>
+                  <h5>You deleting 'bakso'</h5>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-danger btn-lg btn-block" @click="showDeleteModal=false">Yes</button>
+                  <button type="button" class="btn btn-success btn-lg btn-block" @click="showDeleteModal=false">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        <!-- Delete Product -->
     </div>
 </template>
 
 <script>
-import Card from '../../components/_base/card'
+// import Card from '../../components/_base/card'
 import axios from 'axios'
 export default {
   name: 'Product',
   components: {
-    Card
+    // Card
   },
   data () {
     return {
-      products: [
-        // { id: 1, name: 'Nasi Goreng', price: 10000 },
-        // { id: 2, name: 'Ayam Goreng', price: 8000 },
-        // { id: 3, name: 'Magelangan', price: 12000 },
-        // { id: 4, name: 'Indomie', price: 8000 }
-      ]
+      products: [],
+      // alert
+      errorMsg: false,
+      successMsg: false,
+      showEditModal: false,
+      showDeleteModal: false,
+      form: {
+        name: '',
+        image: '',
+        price: '',
+        idStatus: '1',
+        idCategory: ''
+      }
     }
   },
   methods: {
@@ -40,6 +228,13 @@ export default {
           console.log(res.data.result)
           this.products = res.data.result
         })
+    },
+    insertData () {
+      axios.post('http://localhost:3000/api/v1/product/', this.form)
+        .then(res => {
+          // this.getData()
+          this.form = ''
+        })
     }
   },
   mounted () {
@@ -49,5 +244,16 @@ export default {
 </script>
 
 <style scoped>
+  p{
+    font-size: 25px;
+  }
 
+  #overlay {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, .6);
+  }
 </style>
