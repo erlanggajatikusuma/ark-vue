@@ -10,11 +10,6 @@
             <div class="menu-content mx-3">
               <div class="row">
                 <Card v-for="product in filtered" :key="product.id" :data="product"/>
-                <div class="form">
-                  <p>{{form.name}}</p>
-                  <p>{{form.img}}</p>
-                  <p>{{form.price}}</p>
-                </div>
               </div>
             </div>
           </div>
@@ -60,7 +55,7 @@
                 <div class="modalContent d-flex py-2">
                     <label class="col-sm-2 col-form-label h6">Category</label>
                     <div class="col-sm-10">
-                        <div class="dropdown">
+                        <div class="dropdown d-flex">
                             <div class="form-group btn shadow">
                               <select name="category" style="border:transparent;" v-model="form.idCategory">
                                 <option value="1">Drink</option>
@@ -73,8 +68,8 @@
                </form>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-primary" data-dismiss="modal" @click="insertData()" v-show="!addData">Add</button>
+              <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal" @click="insertData()" v-show="!addData">Add</button>
+              <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
             </div>
         </div>
         </div>

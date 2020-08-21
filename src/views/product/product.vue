@@ -41,35 +41,15 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr class="text-center">
-                      <td>1</td>
-                      <td>Bakso</td>
-                      <td>Rp. 10.000</td>
-                      <td>2</td>
-                      <td>1</td>
-                      <td>bakso.png</td>
-                      <td><a href="#" class="text-success" @click="showEditModal=true">Edit</a></td>
+                    <tr class="text-center" v-for="product in products" :key="product.id" :data="product">
+                      <td>{{product.id}}</td>
+                      <td>{{product.name}}</td>
+                      <td>Rp. {{product.price}}</td>
+                      <td>{{product.idCategory}}</td>
+                      <td>{{product.idStatus}}</td>
+                      <td>{{product.image}}</td>
+                      <td><a href="#" class="text-success" @click="edit(product);showEditModal=true">Edit</a></td>
                       <td><a href="#" class="text-danger" @click="showDeleteModal=true">Delete</a></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>1</td>
-                      <td>Bakso</td>
-                      <td>Rp. 10.000</td>
-                      <td>2</td>
-                      <td>1</td>
-                      <td>bakso.png</td>
-                      <td><a href="#" class="text-success">Edit</a></td>
-                      <td><a href="#" class="text-danger">Delete</a></td>
-                    </tr>
-                    <tr class="text-center">
-                      <td>1</td>
-                      <td>Bakso</td>
-                      <td>Rp. 10.000</td>
-                      <td>2</td>
-                      <td>1</td>
-                      <td>bakso.png</td>
-                      <td><a href="#" class="text-success">Edit</a></td>
-                      <td><a href="#" class="text-danger">Delete</a></td>
                     </tr>
                   </tbody>
                 </table>
@@ -141,7 +121,7 @@
                   </button>
                 </div>
                 <div class="modal-body p-4">
-                  <form action="#" method="post">
+                  <!-- <form action="#" method="post">
                     <div class="form-group">
                       <input type="text" name="name" class="form-control form-control-lg" placeholder="name">
                     </div>
@@ -160,8 +140,45 @@
                     <div class="form-group">
                       <button class="btn btn-info btn-lg btn-block" @click="showEditModal=false">Update Product</button>
                     </div>
+                  </form> -->
+                  <form>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Name</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control shadow" v-model="form.name">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Image</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control shadow" v-model="form.image">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Price</label>
+                        <div class="col-sm-10">
+                            <input type="number" class="form-control shadow" v-model="form.price">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Category</label>
+                        <div class="col-sm-10">
+                            <div class="dropdown d-flex">
+                                <div class="form-group btn shadow">
+                                  <select name="category" style="border:transparent;" v-model="form.idCategory">
+                                    <option value="1">Drink</option>
+                                    <option value="2">Food</option>
+                                  </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                   </form>
                 </div>
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal" @click="updateData(form);showEditModal=false">Update</button>
+                      <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
+                    </div>
               </div>
             </div>
           </div>
@@ -206,6 +223,7 @@ export default {
       errorMsg: false,
       successMsg: false,
       showEditModal: false,
+      updateSubmit: false,
       showDeleteModal: false,
       form: {
         name: '',
@@ -214,6 +232,13 @@ export default {
         idStatus: '1',
         idCategory: ''
       }
+    //   editProduct: {
+    //     name: '',
+    //     image: '',
+    //     price: '',
+    //     idStatus: '1',
+    //     idCategory: ''
+    //   }
     }
   },
   methods: {
@@ -223,7 +248,7 @@ export default {
       //     console.log(res.data.Search)
       //     this.products = res.data.Search
       //   })
-      axios.get('http://localhost:3000/api/v1/product/?page=1&limit=9')
+      axios.get('http://localhost:3000/api/v1/product/?page=1&limit=20')
         .then(res => {
           console.log(res.data.result)
           this.products = res.data.result
@@ -232,8 +257,30 @@ export default {
     insertData () {
       axios.post('http://localhost:3000/api/v1/product/', this.form)
         .then(res => {
-          // this.getData()
+          this.getData()
           this.form = ''
+        })
+    },
+    edit (product) {
+      this.form.id = product.id
+      this.form.name = product.name
+      this.form.price = product.price
+      this.form.idCategory = product.idCategory
+      this.form.idStatus = product.idStatus
+      this.form.image = product.image
+    },
+    updateData (form) {
+      axios.patch('http://localhost:3000/api/v1/product/' + form.id, { name: this.form.name, price: this.form.price, idCategory: this.form.idCategory, idStatus: this.form.idStatus, image: this.form.image })
+        .then(res => {
+          this.form.name = ''
+          this.form.price = ''
+          this.form.idCategory = ''
+          this.form.idStatus = ''
+          this.form.image = ''
+          this.getData()
+        })
+        .catch(err => {
+          console.log(err)
         })
     }
   },
