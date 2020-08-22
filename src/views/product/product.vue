@@ -35,7 +35,7 @@
                       <th>Price</th>
                       <th>Id Category</th>
                       <th>Id Status</th>
-                      <th>Image</th>
+                      <!-- <th>Image</th> -->
                       <th>Edit</th>
                       <th>Delete</th>
                     </tr>
@@ -47,9 +47,9 @@
                       <td>Rp. {{product.price}}</td>
                       <td>{{product.idCategory}}</td>
                       <td>{{product.idStatus}}</td>
-                      <td>{{product.image}}</td>
-                      <td><a href="#" class="text-success" @click="edit(product);showEditModal=true">Edit</a></td>
-                      <td><a href="#" class="text-danger" @click="showDeleteModal=true">Delete</a></td>
+                      <!-- <td>{{product.image}}</td> -->
+                      <td><a href="#" class="text-success" @click="showEditModal=true;edit(product)">Edit</a></td>
+                      <td><a href="#" class="text-danger" @click="showDeleteModal=true;deleteData(product)">Delete</a></td>
                     </tr>
                   </tbody>
                 </table>
@@ -104,7 +104,7 @@
                 </div>
                  <div class="modal-footer">
                     <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal" @click="insertData()">Add</button>
-                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal" @click="cancel()">Cancel</button>
                  </div>
               </div>
             </div>
@@ -121,37 +121,11 @@
                   </button>
                 </div>
                 <div class="modal-body p-4">
-                  <!-- <form action="#" method="post">
-                    <div class="form-group">
-                      <input type="text" name="name" class="form-control form-control-lg" placeholder="name">
-                    </div>
-                    <div class="form-group">
-                      <input type="text" name="price" class="form-control form-control-lg" placeholder="price">
-                    </div>
-                    <div class="form-group">
-                      <input type="number" name="category" class="form-control form-control-lg" placeholder="category">
-                    </div>
-                    <div class="form-group">
-                      <input type="number" name="status" class="form-control form-control-lg" placeholder="status">
-                    </div>
-                    <div class="form-group">
-                      <input type="file" name="image" class="form-control form-control-lg" placeholder="image">
-                    </div>
-                    <div class="form-group">
-                      <button class="btn btn-info btn-lg btn-block" @click="showEditModal=false">Update Product</button>
-                    </div>
-                  </form> -->
                   <form>
                     <div class="modalContent d-flex py-2">
                         <label class="col-sm-2 col-form-label h6">Name</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-control shadow" v-model="form.name">
-                        </div>
-                    </div>
-                    <div class="modalContent d-flex py-2">
-                        <label class="col-sm-2 col-form-label h6">Image</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control shadow" v-model="form.image">
                         </div>
                     </div>
                     <div class="modalContent d-flex py-2">
@@ -161,23 +135,35 @@
                         </div>
                     </div>
                     <div class="modalContent d-flex py-2">
-                        <label class="col-sm-2 col-form-label h6">Category</label>
+                        <label class="col-sm-2 col-form-label h6">Image</label>
                         <div class="col-sm-10">
-                            <div class="dropdown d-flex">
-                                <div class="form-group btn shadow">
-                                  <select name="category" style="border:transparent;" v-model="form.idCategory">
-                                    <option value="1">Drink</option>
-                                    <option value="2">Food</option>
-                                  </select>
-                                </div>
-                            </div>
+                            <input type="text" class="form-control shadow" v-model="form.image">
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Status</label>
+                        <div class="col-sm-10 d-flex">
+                            <!-- <input type="text" class="form-control shadow" v-model="form.idStatus"> -->
+                            <select class="form-group btn shadow" name="status" style="border:transparent;" v-model="form.idStatus">
+                              <option value="1">Available</option>
+                              <option value="0">Sold Out</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modalContent d-flex py-2">
+                        <label class="col-sm-2 col-form-label h6">Category</label>
+                        <div class="col-sm-10 d-flex">
+                            <select class="form-group btn shadow" name="category" style="border:transparent;" v-model="form.idCategory">
+                              <option value="1">Drink</option>
+                              <option value="2">Food</option>
+                            </select>
                         </div>
                     </div>
                   </form>
                 </div>
                     <div class="modal-footer">
                       <button type="submit" class="btn btn-primary btn-block" data-dismiss="modal" @click="updateData(form);showEditModal=false">Update</button>
-                      <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal">Cancel</button>
+                      <button type="button" class="btn btn-secondary btn-block" data-dismiss="modal" @click="cancel();showEditModal=false">Cancel</button>
                     </div>
               </div>
             </div>
@@ -195,11 +181,10 @@
                 </div>
                 <div class="modal-body p-4">
                   <h4 class="text-danger">Are you sure to delete this product?</h4>
-                  <h5>You deleting 'bakso'</h5>
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-danger btn-lg btn-block" @click="showDeleteModal=false">Yes</button>
-                  <button type="button" class="btn btn-success btn-lg btn-block" @click="showDeleteModal=false">Cancel</button>
+                  <button type="button" class="btn btn-danger btn-lg btn-block" @click="showDeleteModal=false;deleteData(product)">Yes</button>
+                  <button type="button" class="btn btn-secondary btn-lg btn-block" @click="showDeleteModal=false">Cancel</button>
                 </div>
               </div>
             </div>
@@ -218,7 +203,7 @@ export default {
   },
   data () {
     return {
-      products: [],
+      products: '',
       // alert
       errorMsg: false,
       successMsg: false,
@@ -229,16 +214,9 @@ export default {
         name: '',
         image: '',
         price: '',
-        idStatus: '1',
+        idStatus: 1,
         idCategory: ''
       }
-    //   editProduct: {
-    //     name: '',
-    //     image: '',
-    //     price: '',
-    //     idStatus: '1',
-    //     idCategory: ''
-    //   }
     }
   },
   methods: {
@@ -269,6 +247,14 @@ export default {
       this.form.idStatus = product.idStatus
       this.form.image = product.image
     },
+    cancel () {
+      this.form.id = ''
+      this.form.name = ''
+      this.form.price = ''
+      this.form.idCategory = ''
+      this.form.idStatus = ''
+      this.form.image = ''
+    },
     updateData (form) {
       axios.patch('http://localhost:3000/api/v1/product/' + form.id, { name: this.form.name, price: this.form.price, idCategory: this.form.idCategory, idStatus: this.form.idStatus, image: this.form.image })
         .then(res => {
@@ -281,6 +267,14 @@ export default {
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    deleteData (product) {
+      axios.delete('http://localhost:3000/api/v1/product/' + product.id)
+        .then(res => {
+          this.getData()
+          const index = this.products.indexOf(product.name)
+          this.products.splice(index, 1)
         })
     }
   },
